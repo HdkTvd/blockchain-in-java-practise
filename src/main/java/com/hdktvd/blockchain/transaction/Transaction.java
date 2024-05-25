@@ -18,24 +18,25 @@ public class Transaction {
 	
 	private static int sequence = 0;
 	
-	public Transaction(PublicKey recvPublicKey, PublicKey senderPublicKey, float value, ArrayList<TransactionInput> inputs) {
-		this.transactionId = calculateHash();
+	public Transaction(PublicKey senderPublicKey, PublicKey recvPublicKey, float value, ArrayList<TransactionInput> inputs) {
 		this.receiver = recvPublicKey;
 		this.sender = senderPublicKey;
 		this.value = value;
 		this.inputs = inputs;
+		
+		this.transactionId = calculateHash();
 	}
 	
 	private String calculateHash() {
 		sequence++;
-		return StringUtil.applySha256(sender.toString()+receiver.toString()+Float.toString(value)+Integer.toString(sequence));
+		return StringUtil.applySha256(StringUtil.keyToString(sender)+StringUtil.keyToString(receiver)+Float.toString(value)+Integer.toString(sequence));
 	}
 	public void createSignature(PrivateKey privateKey) {
-		String data = sender.toString() + receiver.toString() + Float.toString(value);
+		String data = StringUtil.keyToString(sender) + StringUtil.keyToString(receiver) + Float.toString(value);
 		signature = StringUtil.applyECDSASig(privateKey, data);
 	}
 	public boolean verifySignature() {
-		String data = sender.toString() + receiver.toString() + Float.toString(value);
+		String data = StringUtil.keyToString(sender) + StringUtil.keyToString(receiver) + Float.toString(value);
 		return StringUtil.verifyECDSASig(sender, data, signature);
 	}
 }
