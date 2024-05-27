@@ -57,19 +57,26 @@ public class StringUtil {
 	}
 	
 	public static String getMerkleRoot(List<String> transactionsId) {
-		if (transactionsId.size() == 1) {
-            return transactionsId.get(0);
+		if (transactionsId.isEmpty()) {
+            return "";
         }
 
-		List<String> newLevel = new ArrayList<>();
-        for (int i = 0; i < transactionsId.size(); i += 2) {
-            if (i + 1 < transactionsId.size()) {
-                newLevel.add(applySha256(transactionsId.get(i) + transactionsId.get(i + 1)));
-            } else {
-                newLevel.add(applySha256(transactionsId.get(i) + transactionsId.get(i))); // If odd number of elements, hash the last one with itself
+        List<String> currentLevel = new ArrayList<>(transactionsId);
+
+        while (currentLevel.size() > 1) {
+            List<String> newLevel = new ArrayList<>();
+
+            for (int i = 0; i < currentLevel.size(); i += 2) {
+                if (i + 1 < currentLevel.size()) {
+                    newLevel.add(applySha256(currentLevel.get(i) + currentLevel.get(i + 1)));
+                } else {
+                    newLevel.add(applySha256(currentLevel.get(i) + currentLevel.get(i))); // If odd number of elements, hash the last one with itself
+                }
             }
+
+            currentLevel = newLevel;
         }
 
-        return getMerkleRoot(newLevel); // Recurse to the next level
+        return currentLevel.get(0);
 	}
 }

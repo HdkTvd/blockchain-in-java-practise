@@ -52,9 +52,10 @@ public class Transaction {
 		}
 		
 //		Check if the total amount is less than the minimum transactions allowed
-//		if (getInputsValue() < DumbCoin.minimumTransactions) {
-//			
-//		}
+		if (getInputsValue() < DumbCoin.minimumTransaction) {
+			System.out.println("#Transactions input are small " + getInputsValue());
+			return false;
+		}
 		
 //		5 coins -> Samay -> Txn(input = 5; output1 = 3; output2 => 2) -> Manjrekar got 2 coins whereas leftover 3 was sent back to Samay
 		float leftOver = getInputsValue() - value;
