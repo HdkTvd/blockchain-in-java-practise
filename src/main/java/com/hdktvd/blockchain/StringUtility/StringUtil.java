@@ -1,9 +1,9 @@
 package com.hdktvd.blockchain.StringUtility;
 
 import java.security.MessageDigest;
-
+import java.util.ArrayList;
 import java.util.Base64;
-
+import java.util.List;
 import java.security.*;
 
 public class StringUtil {
@@ -54,5 +54,22 @@ public class StringUtil {
 	
 	public static String keyToString(Key key) {
 		return Base64.getEncoder().encodeToString((key.getEncoded()));
+	}
+	
+	public static String getMerkleRoot(List<String> transactionsId) {
+		if (transactionsId.size() == 1) {
+            return transactionsId.get(0);
+        }
+
+		List<String> newLevel = new ArrayList<>();
+        for (int i = 0; i < transactionsId.size(); i += 2) {
+            if (i + 1 < transactionsId.size()) {
+                newLevel.add(applySha256(transactionsId.get(i) + transactionsId.get(i + 1)));
+            } else {
+                newLevel.add(applySha256(transactionsId.get(i) + transactionsId.get(i))); // If odd number of elements, hash the last one with itself
+            }
+        }
+
+        return getMerkleRoot(newLevel); // Recurse to the next level
 	}
 }
