@@ -2,11 +2,14 @@ package com.hdktvd.blockchain.wallet;
 
 import java.security.*;
 import java.security.spec.ECGenParameterSpec;
+import java.util.HashMap;
+
+import com.hdktvd.blockchain.transaction.TransactionOutput;
 
 public class Wallet {
 	public PrivateKey privateKey;
 	public PublicKey publicKey;
-	
+		
 	public Wallet() {
 		generateKey();
 	}
@@ -26,4 +29,6 @@ public class Wallet {
 			throw new RuntimeException(e);
 		}
 	}
+	
+	
 }

@@ -1,26 +1,28 @@
 package com.hdktvd.blockchain;
 
-import java.nio.charset.StandardCharsets;
 import java.security.Security;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import com.google.gson.GsonBuilder;
 import com.hdktvd.blockchain.StringUtility.StringUtil;
 import com.hdktvd.blockchain.model.Block;
-import com.hdktvd.blockchain.transaction.Transaction;
+import com.hdktvd.blockchain.transaction.*;
 import com.hdktvd.blockchain.wallet.Wallet;
 
-public class App {
+public class DumbCoin {
 	public static ArrayList<Block> blockchain = new ArrayList<Block>(); 
 	public static int difficulty = 5;
 	
 	public static Wallet wallet1;
 	public static Wallet wallet2;
 	
+	public static HashMap<String, TransactionOutput> UTXOs = new HashMap<String, TransactionOutput>();
+	
 	public static void main(String[] args) {	
-		
+//		Mining coins
 		blockchain.add(new Block("Hi im the first block", "0"));
 		System.out.println("Trying to Mine block 1... ");
 		blockchain.get(0).mineBlock(difficulty);
@@ -39,6 +41,7 @@ public class App {
 		System.out.println("\nThe block chain: ");
 		System.out.println(blockchainJson);
 		
+//		Wallets and transactions
 		Security.addProvider(new BouncyCastleProvider());
 		
 		wallet1 = new Wallet();
@@ -55,6 +58,10 @@ public class App {
 		t1.createSignature(wallet1.privateKey);
 		
 		System.out.println("Verify signature - " + t1.verifySignature());
+		
+//		Processing the transactions
+		
+		
 }
 	
 	public static Boolean isChainValid() {
